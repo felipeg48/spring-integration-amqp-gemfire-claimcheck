@@ -1,5 +1,5 @@
-AMQP Backed Spring Integration using vFabric RabbitMQ 
-=====================================================
+Claimcheck pattern with vFabric RabbitMQ and Gemfire
+====================================================
 
 In this project, I will demo Spring Integration, vFabric RabbitMQ and Gemfire to demo Claimcheck pattern. 
 
