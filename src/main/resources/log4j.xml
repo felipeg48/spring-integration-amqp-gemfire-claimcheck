@@ -12,7 +12,7 @@
 
 
 	<!-- Loggers -->
-	<logger name="com.goSmarter.amqp.service">
+	<logger name="com.goSmarter.amqp">
 		<level value="debug" />
 	</logger>
 

@@ -1,14 +1,12 @@
 package com.goSmarter.amqp;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +24,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 		"classpath:gemfire-config.xml" })
 public class PublisherSubscriberTest {
 
-	private static Logger logger = Logger.getLogger(PublisherSubscriberTest.class);
-
 	@Autowired
 	@Qualifier("p2p-pollable-channel")
 	MessageChannel channel;
-	
+
+	@Autowired
+	@Qualifier("checkout-channel3")
+	PollableChannel channel1;
+
 	@Test
 	public void testIntegration() {
 		try {
@@ -41,7 +41,10 @@ public class PublisherSubscriberTest {
 			Message<String> message = MessageBuilder.withPayload(request)
 					.build();
 
-			channel.send(message);			
+			channel.send(message);
+
+			String outMessage = channel1.receive(1000).getPayload().toString();
+			assertEquals(outMessage, request);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

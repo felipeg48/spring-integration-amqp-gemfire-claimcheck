@@ -7,10 +7,17 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-
 	<int:poller default="true" fixed-rate="1000" />
  
 	<int:channel id="p2p-pollable-channel" />
 
 	<int:publish-subscribe-channel id="pub-sub-channel" />
+	
+	<int:channel id="checkout-channel3" >
+		<int:queue />
+	</int:channel>
+	
+	<int:claim-check-out message-store="simpleMessageStore"
+		input-channel="pub-sub-channel" output-channel="checkout-channel3"
+		remove-message="false" />
 </beans>
