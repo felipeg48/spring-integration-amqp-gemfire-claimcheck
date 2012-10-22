@@ -21,7 +21,11 @@
 	<int:channel id="checkout-channel2" />
 	
 	<bean id="simpleMessageStore"
-		class="org.springframework.integration.store.SimpleMessageStore" />
+		class="org.springframework.integration.gemfire.store.GemfireMessageStore">
+		<constructor-arg ref="myCache" />
+	</bean>
+
+	<gfe:cache id="myCache" />
 
 	<int:claim-check-in message-store="simpleMessageStore"
 		input-channel="p2p-pollable-channel" output-channel="pub-sub-channel" />
