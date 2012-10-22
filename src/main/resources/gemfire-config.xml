@@ -11,5 +11,5 @@
 		<constructor-arg ref="myCache" />
 	</bean>
 
-	<bean id="myCache" class="org.springframework.data.gemfire.CacheFactoryBean"/>
+	<gfe:cache id="myCache" />
 </beans>
