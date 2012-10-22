@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+	xmlns:int-xml="http://www.springframework.org/schema/integration/xml"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
+		http://www.springframework.org/schema/integration/amqp http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-2.1.xsd
+		http://www.springframework.org/schema/integration/xml http://www.springframework.org/schema/integration/xml/spring-integration-xml.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<int:channel id="p2p-pollable-channel" />
+
+	<int:publish-subscribe-channel id="pub-sub-channel"  />
+	<int:channel id="checkout-channel1" />
+	<int:channel id="checkout-channel2" />
+	
+	<bean id="simpleMessageStore"
+		class="org.springframework.integration.store.SimpleMessageStore" />
+
+	<int:claim-check-in message-store="simpleMessageStore"
+		input-channel="p2p-pollable-channel" output-channel="pub-sub-channel" />
+
+	<int:claim-check-out message-store="simpleMessageStore"
+		input-channel="pub-sub-channel" output-channel="checkout-channel1"
+		remove-message="false" />
+	<int:service-activator input-channel="checkout-channel1"
+		id="serviceActivator1" ref="serviceActivator1Bean" method="logXml" />
+
+
+	<int:claim-check-out message-store="simpleMessageStore"
+		input-channel="pub-sub-channel" output-channel="checkout-channel2"
+		remove-message="false" />
+	<int:service-activator input-channel="checkout-channel2"
+		id="serviceActivator2" ref="serviceActivator2Bean" method="logXml" />
+
+	<bean id="serviceActivator1Bean" class="com.goSmarter.amqp.service.Subscriber1ServiceActivator">
+	</bean>
+
+	<bean id="serviceActivator2Bean" class="com.goSmarter.amqp.service.Subscriber2ServiceActivator">
+	</bean>
+</beans>
